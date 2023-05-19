@@ -31,6 +31,17 @@ public class TMFunctions: UIViewController {
         return img.jpeg(quality)?.base64EncodedString() ?? ""
     }
     
+    /// Converts a Base64 encoded string representation of an image back into a UIImage.
+    /// - Parameter base64String: The Base64 encoded string representation of the image.
+    /// - Returns: The UIImage instance created from the Base64 encoded string.
+    public static func convertBase64ToImage(base64String: String) -> UIImage? {
+        if let data = Data(base64Encoded: base64String) {
+            return UIImage(data: data)
+        }
+        return nil
+    }
+
+    
     /**
      Displays a toast message on the specified view with customizations.
 
@@ -68,7 +79,8 @@ public class TMFunctions: UIViewController {
     /// - Parameters:
     ///   - viewController: The view controller from which to present the preview image view controller.
     ///   - tappedImage: The image that was tapped and needs to be displayed.
-    public static func presentImage(from viewController: UIViewController, tappedImage: UIImage) {
+    public static func presentImage(from viewController: UIViewController, tappedImage: UIImage?) {
+        guard let tappedImage = tappedImage else {return}
         let vc = PreviewImageVC()
         vc.modalPresentationStyle = .overCurrentContext
         vc.image = tappedImage

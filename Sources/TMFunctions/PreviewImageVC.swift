@@ -59,12 +59,21 @@ class PreviewImageVC: UIViewController {
     }
     
     private func setupGestures() {
+        let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSingleTap(_:)))
+        singleTapGesture.numberOfTapsRequired = 1
+        scrollView.addGestureRecognizer(singleTapGesture)
+        
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTapGesture)
         
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         scrollView.addGestureRecognizer(pinchGesture)
+    }
+    
+    @objc private func handleSingleTap(_ gesture: UITapGestureRecognizer) {
+        // Dismiss the view controller or perform any other action you desire
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
@@ -105,6 +114,7 @@ class PreviewImageVC: UIViewController {
                              y: center.y - size.height / 2)
         return CGRect(origin: origin, size: size)
     }
+    
 }
 
 extension PreviewImageVC: UIScrollViewDelegate {
