@@ -40,22 +40,22 @@ public class TMFunctions: UIViewController {
         }
         return nil
     }
-
+    
     
     /**
      Displays a toast message on the specified view with customizations.
-
+     
      - Parameters:
-       - view: The view on which to display the toast.
-       - message: The message to display in the toast.
-       - duration: The duration of the toast message display in seconds. Defaults to 2.5 seconds.
-       - backgroundColor: The background color of the toast. Defaults to black with alpha 0.6.
-       - textColor: The text color of the toast. Defaults to white.
-       - font: The font of the toast message. Defaults to system font with size 12 and semibold weight.
-       - cornerRadius: The corner radius of the toast. Defaults to 15.
+     - view: The view on which to display the toast.
+     - message: The message to display in the toast.
+     - duration: The duration of the toast message display in seconds. Defaults to 2.5 seconds.
+     - backgroundColor: The background color of the toast. Defaults to black with alpha 0.6.
+     - textColor: The text color of the toast. Defaults to white.
+     - font: The font of the toast message. Defaults to system font with size 12 and semibold weight.
+     - cornerRadius: The corner radius of the toast. Defaults to 15.
      */
     public static func showToast(on view: UIView, message: String, duration: TimeInterval = 2.5, backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.6), textColor: UIColor = .white, font: UIFont = .systemFont(ofSize: 12, weight: .semibold), cornerRadius: CGFloat = 15) {
-        let toastLabel = UILabel(frame: CGRect(x: view.frame.width/4, y: view.frame.size.height-150, width: view.frame.width/2, height: 40))
+        let toastLabel = UILabel()
         toastLabel.backgroundColor = backgroundColor
         toastLabel.textColor = textColor
         toastLabel.font = font
@@ -65,7 +65,16 @@ public class TMFunctions: UIViewController {
         toastLabel.alpha = 1.0
         toastLabel.layer.cornerRadius = cornerRadius
         toastLabel.clipsToBounds = true
+        
         view.addSubview(toastLabel)
+        
+        // Set constraints for automatic height adjustment
+        toastLabel.translatesAutoresizingMaskIntoConstraints = false
+        toastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        toastLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        toastLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
+        toastLabel.setContentHuggingPriority(.required, for: .vertical)
+        
         UIView.animate(withDuration: 1.5, delay: duration, options: .curveEaseOut, animations: {
             toastLabel.alpha = 0.0
         }, completion: {(isCompleted) in
@@ -110,25 +119,27 @@ public class TMFunctions: UIViewController {
         }
         return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
-
+    
     /**
      Applies a shadow effect to the view.
      
      - Parameters:
-       - view: The view to apply the shadow effect to.
-       - offset: The offset of the shadow from the view.
-       - opacity: The opacity of the shadow.
-       - radius: The radius of the shadow.
-       - color: The color of the shadow.
+     - view: The view to apply the shadow effect to.
+     - offset: The offset of the shadow from the view.
+     - opacity: The opacity of the shadow.
+     - radius: The radius of the shadow.
+     - color: The color of the shadow.
      */
-    public static func applyShadow(to view: UIView, offset: CGSize = CGSize(width: 0, height: 0), opacity: Float = 0.5, radius: CGFloat = 4, color: UIColor = .black) {
-        view.layer.masksToBounds = false
-        view.layer.shadowColor = color.cgColor
-        view.layer.shadowOffset = offset
-        view.layer.shadowOpacity = opacity
-        view.layer.shadowRadius = radius
+    public static func applyShadow(to views: UIView..., offset: CGSize = CGSize(width: 0, height: 0), opacity: Float = 0.5, radius: CGFloat = 4, color: UIColor = .black) {
+        for view in views {
+            view.layer.masksToBounds = false
+            view.layer.shadowColor = color.cgColor
+            view.layer.shadowOffset = offset
+            view.layer.shadowOpacity = opacity
+            view.layer.shadowRadius = radius
+        }
     }
-    
+
     /**
      Converts a `Date` object to a string representation using the specified format.
      
