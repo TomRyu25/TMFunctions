@@ -1,0 +1,11 @@
+# Xcode
+.build/
+*.xcodeproj/
+xcuserdata/
+
+# macOS
+.DS_Store
+
+# Sensitive data (replace with your own filenames or paths)
+secret.txt
+sensitive/
