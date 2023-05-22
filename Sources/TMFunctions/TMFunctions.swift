@@ -91,9 +91,17 @@ public class TMFunctions: UIViewController {
     public static func presentImage(from viewController: UIViewController, tappedImage: UIImage?) {
         guard let tappedImage = tappedImage else {return}
         let vc = PreviewImageVC()
-        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
         vc.image = tappedImage
-        
+
+        let blurEffect = UIBlurEffect(style: .systemChromeMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = vc.view.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        vc.view.addSubview(blurView)
+        vc.view.sendSubviewToBack(blurView)
+        blurView.alpha = 0.8
         viewController.present(vc, animated: true, completion: nil)
     }
     

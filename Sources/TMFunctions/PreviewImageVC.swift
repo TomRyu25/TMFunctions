@@ -10,7 +10,8 @@ import UIKit
 
 class PreviewImageVC: UIViewController {
     var image: UIImage?
-    
+    private var lastPanTranslation: CGPoint = .zero
+
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,6 +70,9 @@ class PreviewImageVC: UIViewController {
         
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         scrollView.addGestureRecognizer(pinchGesture)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        scrollView.addGestureRecognizer(panGesture)
     }
     
     @objc private func handleSingleTap(_ gesture: UITapGestureRecognizer) {
@@ -82,7 +86,11 @@ class PreviewImageVC: UIViewController {
         } else {
             let location = gesture.location(in: imageView)
             let zoomRect = zoomRectForScale(scale: scrollView.maximumZoomScale, center: location)
-            scrollView.zoom(to: zoomRect, animated: true)
+            
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                // Zoom the scroll view to the target zoom rect
+                self?.scrollView.zoom(to: zoomRect, animated: false)
+            }
         }
     }
     
@@ -106,6 +114,26 @@ class PreviewImageVC: UIViewController {
             }
         }
     }
+    
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        guard let view = gesture.view else { return }
+        
+        if gesture.state == .began {
+            lastPanTranslation = .zero
+        } else if gesture.state == .changed {
+            let translation = gesture.translation(in: view)
+            let deltaX = translation.x - lastPanTranslation.x
+            let deltaY = translation.y - lastPanTranslation.y
+            
+            let currentOffset = scrollView.contentOffset
+            let translatedOffset = CGPoint(x: currentOffset.x - deltaX, y: currentOffset.y - deltaY)
+            
+            scrollView.setContentOffset(translatedOffset, animated: false)
+            
+            lastPanTranslation = translation
+        }
+    }
+
     
     private func zoomRectForScale(scale: CGFloat, center: CGPoint) -> CGRect {
         let size = CGSize(width: scrollView.bounds.size.width / scale,
