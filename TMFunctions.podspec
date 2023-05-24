@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "TMFunctions"
-  spec.version      = "0.0.4"
+  spec.version      = "0.0.6"
   spec.summary      = "A library that contains many useable swift functions."
 
   # This description is used to generate tags and improve search results.
@@ -39,7 +39,7 @@ this cocoapods library helps you modify things like showing a toast, check if st
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  spec.license      = { :type => "MIT", :file => "LICENSE" }
+  spec.license      = { :type => "MIT", :file => "LICENSE.rtf" }
   # spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 

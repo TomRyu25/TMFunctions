@@ -27,6 +27,9 @@ let package = Package(
         .target(
             name: "TMCircularProgressView",
                 dependencies: []),
+        .target(
+            name: "TMManageQR",
+                dependencies: []),
         .testTarget(
             name: "TMFunctionsTests",
             dependencies: ["TMFunctions"]
