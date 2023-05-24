@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class TMScanQR{
+public class TMManageQR{
     /// Presents a view controller for scanning QR codes.
     ///
     /// - Parameters:
