@@ -1,5 +1,5 @@
 //
-//  ScanQRVC.swift
+//  ScanQRViewController.swift
 //  
 //
 //  Created by Tommy Ryu Tannaca on 24/05/23.
@@ -8,37 +8,103 @@
 import UIKit
 import AVFoundation
 
-class ScanQRVC: UIViewController {
+class ScanQRViewController: UIViewController {
     
     var detectedQR: ((String) -> Void)?
     
-    @IBOutlet weak var topView: UIView!
-    @IBOutlet weak var titleLbl: UILabel!
-    @IBOutlet weak var backBtn: UIButton!
-    
-    @IBOutlet weak var botView: UIView!
-    @IBOutlet weak var resultLbl: UILabel!
+    var topView: UIView!
+    var titleLbl: UILabel!
+    var backBtn: UIButton!
+    var botView: UIView!
+    var resultLbl: UILabel!
 
+    
     var captureSession = AVCaptureSession()
     var videoPreviewLayer = AVCaptureVideoPreviewLayer()
     var qrcodeFrameView : UIView?
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        setupScanQR()
+    }
+    private func setupViews() {
+        let safeArea = view.safeAreaLayoutGuide
+        
+        // Top View
+        topView = UIView()
+        topView.translatesAutoresizingMaskIntoConstraints = false
+        topView.backgroundColor = .white
         topView.layer.masksToBounds = false
         topView.layer.shadowColor = UIColor.black.cgColor
         topView.layer.shadowOffset = .zero
         topView.layer.shadowOpacity = 0.15
         topView.layer.shadowRadius = 2
+        view.addSubview(topView)
         
-        setupScanQR()
+        NSLayoutConstraint.activate([
+            topView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2, constant: -43)
+        ])
+        
+        // Title Label
+        titleLbl = UILabel()
+        titleLbl.translatesAutoresizingMaskIntoConstraints = false
+        titleLbl.text = "Scan QR"
+        titleLbl.textAlignment = .center
+        titleLbl.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        topView.addSubview(titleLbl)
+        
+        NSLayoutConstraint.activate([
+            titleLbl.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            titleLbl.centerYAnchor.constraint(equalTo: topView.centerYAnchor)
+        ])
+        
+        // Back Button
+        backBtn = UIButton(type: .system)
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        backBtn.setTitle("Back", for: .normal)
+        backBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        backBtn.addTarget(self, action: #selector(didTapBack(_:)), for: .touchUpInside)
+        topView.addSubview(backBtn)
+        
+        NSLayoutConstraint.activate([
+            backBtn.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            backBtn.centerYAnchor.constraint(equalTo: topView.centerYAnchor)
+        ])
+        
+        // Bottom View
+        botView = UIView()
+        botView.translatesAutoresizingMaskIntoConstraints = false
+        botView.backgroundColor = .white
+        view.addSubview(botView)
+        
+        NSLayoutConstraint.activate([
+            botView.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            botView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            botView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            botView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+        
+        // Result Label
+        resultLbl = UILabel()
+        resultLbl.translatesAutoresizingMaskIntoConstraints = false
+        resultLbl.textAlignment = .center
+        botView.addSubview(resultLbl)
+        
+        NSLayoutConstraint.activate([
+            resultLbl.centerXAnchor.constraint(equalTo: botView.centerXAnchor),
+            resultLbl.centerYAnchor.constraint(equalTo: botView.centerYAnchor)
+        ])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         captureSession.stopRunning()
     }
     
-    @IBAction func didTapBack(_ sender: Any) {
+    @objc func didTapBack(_ sender: UIButton) {
         dismiss(animated: false)
     }
 
@@ -100,7 +166,7 @@ class ScanQRVC: UIViewController {
     }
 }
 
-extension ScanQRVC: AVCaptureMetadataOutputObjectsDelegate{
+extension ScanQRViewController: AVCaptureMetadataOutputObjectsDelegate{
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if metadataObjects.count == 0 {
             qrcodeFrameView?.frame = .zero

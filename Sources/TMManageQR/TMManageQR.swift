@@ -15,7 +15,7 @@ public class TMManageQR{
     ///   - viewController: The view controller from which to present the QR code scanner.
     ///   - detectedQR: A closure that is called when a QR code is detected, providing the scanned QR code as a string parameter.
     public static func scanQR(from viewController: UIViewController, detectedQR: @escaping (String)->Void){
-        guard let vc = UIStoryboard(name: "ScanQRSb", bundle: nil).instantiateViewController(withIdentifier: "ScanQRVC") as? ScanQRVC else {return}
+        let vc = ScanQRViewController()
         
         vc.detectedQR = { qrCode in
             detectedQR(qrCode)
