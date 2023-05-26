@@ -22,6 +22,7 @@ public class TMManageQR{
         }
         
         vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .crossDissolve
         viewController.present(vc, animated: true)
     }
     

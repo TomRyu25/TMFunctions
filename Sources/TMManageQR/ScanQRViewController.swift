@@ -1,6 +1,6 @@
 //
 //  ScanQRViewController.swift
-//  
+//
 //
 //  Created by Tommy Ryu Tannaca on 24/05/23.
 //
@@ -43,10 +43,10 @@ class ScanQRViewController: UIViewController {
         view.addSubview(topView)
         
         NSLayoutConstraint.activate([
-            topView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            topView.topAnchor.constraint(equalTo: view.topAnchor),
             topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2, constant: -43)
+            topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1)
         ])
         
         // Title Label
@@ -54,25 +54,26 @@ class ScanQRViewController: UIViewController {
         titleLbl.translatesAutoresizingMaskIntoConstraints = false
         titleLbl.text = "Scan QR"
         titleLbl.textAlignment = .center
-        titleLbl.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        titleLbl.textColor = .black
+        titleLbl.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         topView.addSubview(titleLbl)
         
         NSLayoutConstraint.activate([
-            titleLbl.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            titleLbl.centerYAnchor.constraint(equalTo: topView.centerYAnchor)
+            titleLbl.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            titleLbl.centerYAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16)
         ])
         
         // Back Button
         backBtn = UIButton(type: .system)
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         backBtn.setTitle("Back", for: .normal)
-        backBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        backBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         backBtn.addTarget(self, action: #selector(didTapBack(_:)), for: .touchUpInside)
         topView.addSubview(backBtn)
         
         NSLayoutConstraint.activate([
             backBtn.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            backBtn.centerYAnchor.constraint(equalTo: topView.centerYAnchor)
+            backBtn.centerYAnchor.constraint(equalTo: titleLbl.centerYAnchor)
         ])
         
         // Bottom View
@@ -82,21 +83,26 @@ class ScanQRViewController: UIViewController {
         view.addSubview(botView)
         
         NSLayoutConstraint.activate([
-            botView.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            botView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2, constant: -43),
             botView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             botView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            botView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            botView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         // Result Label
         resultLbl = UILabel()
+        resultLbl.text = "Point the camera at the QR Code"
         resultLbl.translatesAutoresizingMaskIntoConstraints = false
         resultLbl.textAlignment = .center
+        resultLbl.textColor = .lightGray
+        resultLbl.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        resultLbl.numberOfLines = 4
         botView.addSubview(resultLbl)
         
         NSLayoutConstraint.activate([
             resultLbl.centerXAnchor.constraint(equalTo: botView.centerXAnchor),
-            resultLbl.centerYAnchor.constraint(equalTo: botView.centerYAnchor)
+            resultLbl.centerYAnchor.constraint(equalTo: botView.centerYAnchor),
+            resultLbl.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32)
         ])
     }
     
@@ -142,8 +148,6 @@ class ScanQRViewController: UIViewController {
             
             //Move top view and botom view to front
             view.bringSubviewToFront(topView)
-            view.bringSubviewToFront(titleLbl)
-            view.bringSubviewToFront(backBtn)
             view.bringSubviewToFront(botView)
             
             // Initialize QR Code frame to highlight the QR Code
@@ -181,10 +185,12 @@ extension ScanQRViewController: AVCaptureMetadataOutputObjectsDelegate{
             qrcodeFrameView?.frame = barCodeObject!.bounds
             
             if metadataObj.stringValue != nil {
-                resultLbl.text = "QR Scanned with value: \(String(describing: metadataObj.stringValue)). please wait"
-                
                 let qr = metadataObj.stringValue ?? ""
-                detectedQR?(qr)
+                resultLbl.text = "\(qr)\n\nplease wait"
+                
+                dismiss(animated: true){ [weak self] in
+                    self?.detectedQR?(qr)
+                }
             }
         }
     }
