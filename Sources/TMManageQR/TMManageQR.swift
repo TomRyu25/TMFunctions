@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+/// A utility class for managing QR codes such as creating or reading QR Code.
 public class TMManageQR{
     /// Presents a view controller for scanning QR codes.
     ///
