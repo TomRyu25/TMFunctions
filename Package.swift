@@ -24,12 +24,16 @@ let package = Package(
         .target(
             name: "TMFunctions",
             dependencies: []),
+        
         .target(
             name: "TMCircularProgressView",
-                dependencies: []),
+            dependencies: [],
+            path: "Sources/TMCircularProgressView"),
+        
         .target(
             name: "TMManageQR",
-                dependencies: []),
+            dependencies: []),
+        
         .testTarget(
             name: "TMFunctionsTests",
             dependencies: ["TMFunctions"]
